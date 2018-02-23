@@ -1,0 +1,7 @@
+[package]
+name = "icecream-rs"
+version = "0.0.1"
+authors = ["Eric <ericchang00@gmail.com>"]
+
+[dependencies]
+backtrace = "0.3"
