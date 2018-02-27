@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use backtrace::{Backtrace, BacktraceSymbol};
+use backtrace::Backtrace;
 
 const UNKNOWN_STRING: &str = "?";
 
