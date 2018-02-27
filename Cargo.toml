@@ -1,5 +1,5 @@
 [package]
-name = "icecream-rs"
+name = "icecream"
 description = "Print debugging with inspection."
 version = "0.0.1"
 authors = ["Eric <ericchang00@gmail.com>"]
