@@ -1,7 +1,10 @@
 [package]
 name = "icecream"
-description = "Print debugging with inspection."
 version = "0.0.1"
+readme = "README.md"
+repository = "https://github.com/ericchang00/icecream-rs"
+homepage = "https://github.com/ericchang00/icecream-rs"
+description = "Print debugging with inspection."
 authors = ["Eric <ericchang00@gmail.com>"]
 license = "MIT"
 
