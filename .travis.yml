@@ -1,8 +1,8 @@
 language: rust
 
 os:
-  - linux
   - osx
+  # - linux  # backtraces must be parsed differently on linux
 
 script:
   - cargo test

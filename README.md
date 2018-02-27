@@ -1,5 +1,7 @@
 # icecream-rs
 
+[![Build Status](https://travis-ci.org/ericchang00/icecream-rs.svg?branch=master)](https://travis-ci.org/ericchang00/icecream-rs)
+
 Print debugging with inspection for Rust, inspired by [icecream](https://github.com/gruns/icecream) for Python.
 
 I tend to use a lot of print debugging when writing Rust. `icecream` provides the `ic!()` macro to make print debugging more convenient by formatting print statements with helpful information like:
