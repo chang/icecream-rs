@@ -5,6 +5,34 @@ use backtrace::Backtrace;
 const UNKNOWN_STRING: &str = "?";
 
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_line_info_creation() {
+        let bt = Backtrace::new();  // line 14 of lineinfo.rs
+        let li = LineInfo::new(&bt);
+
+        assert_eq!(li.modname, Some("tests"));
+        assert_eq!(li.funcname, Some("test_line_info_creation"));
+        assert_eq!(li.filepath, Some(Path::new("src/lineinfo.rs")));
+        assert_eq!(li.lineno, Some(14));
+    }
+
+    #[test]
+    fn test_line_info_parsing() {
+        let bt = Backtrace::new();
+        let li = LineInfo::new(&bt);
+
+        assert_eq!(li.modname(), "tests");
+        assert_eq!(li.funcname(), "test_line_info_parsing");
+        assert_eq!(li.filename(), "lineinfo.rs");
+        assert_eq!(li.lineno(), "25".to_string());
+    }
+}
+
+
 #[derive(Debug)]
 pub struct LineInfo<'a> {
     // addr: Option<&'a str>,  // TODO
@@ -45,9 +73,14 @@ impl<'a> LineInfo<'a> {
         let modname: Option<&'a str>;
         let funcname: Option<&'a str>;
         if let Some(name) = symbol_name {
-            let mut attrs = name.split("::");
+            // The immediate function and module name should be parsed in reverse order. Example:
+            // "icecream::lineinfo::tests::test_line_info_parsing::h80b501ffc06f3b37"
+            let mut attrs = name.split(':').rev();  // Must split on char to use reverse iterator
+            attrs.next();  // Strip mem address
+            attrs.next();
+            funcname = attrs.next();  // TODO: splitting on ':' leaves a whitespace. Remove it in a cleaner way.
+            attrs.next();
             modname = attrs.next();
-            funcname = attrs.next();
         } else {
             modname = None;
             funcname = None;
@@ -96,7 +129,7 @@ impl<'a> LineInfo<'a> {
 }
 
 
-pub fn print_backtrace_info(bt: Backtrace) {
+pub fn print_backtrace_info(bt: &Backtrace) {
     let frames = bt.frames();
     let mut i = 0;
 
