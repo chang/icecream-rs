@@ -5,5 +5,4 @@ os:
   # - linux  # backtraces must be parsed differently on linux
 
 script:
-  - cargo test
-
+  - cargo test -- --nocapture

@@ -10,3 +10,6 @@ license = "MIT"
 
 [dependencies]
 backtrace = "0.3"
+
+[dev-dependencies]
+gag = "0.1.9"

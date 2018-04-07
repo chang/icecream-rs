@@ -47,3 +47,11 @@ mod a_module {
 7 | some_function
 > x = Some(99)
 ```
+
+### Tests
+
+Tests *must* be run with the `--nocapture` flag since they test the output of stdout, and `cargo test` without flags will capture stdout, making the tests fail.
+
+```
+cargo test -- --nocapture
+```

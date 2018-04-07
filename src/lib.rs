@@ -31,7 +31,6 @@ pub fn full_header(li: &ParsedBacktrace) {
              ss = SEP_SYMBOL);
 }
 
-pub fn print_variable<T: Debug>(var: &T) {
-    let varname = stringify!(var);
+pub fn print_variable<T: Debug>(var: &T, varname: &str) {
     println!("{} {} = {:?}", PAD_SYMBOL, varname, var);
 }
