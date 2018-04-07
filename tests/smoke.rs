@@ -4,14 +4,10 @@ extern crate icecream;
 
 #[test]
 fn smoke_test() {
-    ic!();
-    ic!(f);
-    ic!(ff);
+    ice!();
 
     let x = 99;
-    ic!(x);
-    ic!(x, f);
-    ic!(x, ff);
+    ice!(x);
 }
 
 
@@ -19,13 +15,9 @@ fn smoke_test() {
 mod a_module {
     #[test]
     fn some_function() {
-        ic!();
-        ic!(f);
-        ic!(ff);
+        ice!();
 
         let x = 99;
-        ic!(x);
-        ic!(x, f);
-        ic!(x, ff);
+        ice!(x);
     }
 }

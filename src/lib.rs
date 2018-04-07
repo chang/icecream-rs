@@ -23,14 +23,6 @@ pub fn short_header(li: &ParsedBacktrace) {
 }
 
 pub fn full_header(li: &ParsedBacktrace) {
-    println!("{num} {ss} {module}::{func}",
-             module = li.modname(),
-             num = li.lineno(),
-             func = li.funcname(),
-             ss = SEP_SYMBOL);
-}
-
-pub fn fullfull_header(li: &ParsedBacktrace) {
     println!("{num} {ss} {file}::{module}::{func}",
              file = li.filename(),
              module = li.modname(),

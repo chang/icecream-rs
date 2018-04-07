@@ -1,52 +1,29 @@
 extern crate backtrace;
 
+
 #[macro_export]
-macro_rules! ic_header {
+macro_rules! header {
     () => (
+        println!("Placeholder.");
+    );
+}
+
+#[macro_export]
+macro_rules! full_header {
+    () => (
+        // The full header parses a backtrace, so may be significantly slower.
         let bt = $crate::Backtrace::new();
         let li = $crate::parsed_backtrace::ParsedBacktrace::new(&bt);
         $crate::short_header(&li);
     );
-
-    // short for "full"
-    (f) => (
-        let bt = $crate::Backtrace::new();
-        let li = $crate::parsed_backtrace::ParsedBacktrace::new(&bt);
-        $crate::full_header(&li);
-    );
-
-    (ff) => (
-        let bt = $crate::Backtrace::new();
-        let li = $crate::parsed_backtrace::ParsedBacktrace::new(&bt);
-        $crate::fullfull_header(&li);
-    );
 }
 
 #[macro_export]
-macro_rules! ic_debug_print {
+macro_rules! ice {
+    () => ( full_header!(); );
+
     ($x:ident) => (
+        full_header!();
         $crate::print_variable(&$x);
-    );
-}
-
-#[macro_export]
-macro_rules! ic {
-    () => ( ic_header!(); );
-    (f) => ( ic_header!(f); );
-    (ff) => ( ic_header!(ff); );
-
-    ($x:ident) => (
-        ic_header!();
-        ic_debug_print!($x);
-    );
-
-    ($x:ident, f) => (
-        ic_header!(f);
-        ic_debug_print!($x);
-    );
-
-    ($x:ident, ff) => (
-        ic_header!(ff);
-        ic_debug_print!($x);
     );
 }
