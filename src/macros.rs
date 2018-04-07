@@ -4,20 +4,20 @@ extern crate backtrace;
 macro_rules! ic_header {
     () => (
         let bt = $crate::Backtrace::new();
-        let li = $crate::lineinfo::LineInfo::new(&bt);
+        let li = $crate::parsed_backtrace::ParsedBacktrace::new(&bt);
         $crate::short_header(&li);
     );
 
     // short for "full"
     (f) => (
         let bt = $crate::Backtrace::new();
-        let li = $crate::lineinfo::LineInfo::new(&bt);
+        let li = $crate::parsed_backtrace::ParsedBacktrace::new(&bt);
         $crate::full_header(&li);
     );
 
     (ff) => (
         let bt = $crate::Backtrace::new();
-        let li = $crate::lineinfo::LineInfo::new(&bt);
+        let li = $crate::parsed_backtrace::ParsedBacktrace::new(&bt);
         $crate::fullfull_header(&li);
     );
 }
