@@ -1,51 +1,85 @@
 # icecream-rs
 
-[![Build Status](https://travis-ci.org/ericchang00/icecream-rs.svg?branch=master)](https://travis-ci.org/ericchang00/icecream-rs)
+<p align="left">
+  <a href="https://travis-ci.org/ericchang00/icecream-rs">
+    <img src="https://img.shields.io/travis/ericchang00/icecream-rs.svg">
+  </a>
+  <a href="https://crates.io/crates/icecream">
+    <img src="https://img.shields.io/crates/v/icecream.svg">
+  </a>
+</p>
 
-Print debugging with inspection for Rust, inspired by [icecream](https://github.com/gruns/icecream) for Python.
+```rust
+let x = vec![1, 2, 3];
 
-I tend to use a lot of print debugging when writing Rust. `icecream` provides the `ic!()` macro to make print debugging more convenient by formatting print statements with helpful information like:
-- line number
-- calling function
-- module name
-- file name
+// regular print debugging...
+println!("x = {:?}", x);         // x = [1, 2, 3]
 
+// icecream print debugging.
+ic!(x);                          // main.rs:8 ❯ x = [1, 2, 3]
+```
+
+Print debugging with inspection for Rust. Inspired by [icecream](https://github.com/gruns/icecream) for Python.
+
+I tend to do a lot of print debugging when writing Rust. `icecream` provides the `ic!()` and `ice!()` macros to make print debugging more convenient by:
+
+1. Using the`std::fmt::Debug` formatter, by default.
+2. Displaying helpful information like line number, calling function, module name, and file name.
 
 ### Debugging with `ic!()`
 
-`src/example.rs`
-
 ```rust
+// src/example.rs
 #[macro_use]
 extern crate icecream;
 
 mod a_module {
     fn some_function() {
         let x = Some(99);
-        ic!();
+        ic!(x);
     }
 }
 ```
 
-`ic!()` with no parameters prints the line number and calling function:
+#### Plain
+`ic!()` prints the filename and line number.
 ```
-7 | some_function
-```
-
-`ic!(f)` (full) prints more information:
-```
-7 | a_module::some_function
+example.rs:8 ❯
 ```
 
-`ic!(ff)` (full) prints even more information:
+#### Matching on an identifier
+`ic!(x)` prints the name of the variable and its value.
 ```
-7 | example.rs::a_module::some_function
+example.rs:9 ❯ x = Some(99)
 ```
 
-`ic!(x)` with a variable prints the name of the variable and the value formatted with `std::fmt::Debug`.
+#### Matching on an expression
+`ic!(x.unwrap() + 1)` evaluates the inner expression and prints the resulting value.
+
 ```
-7 | some_function
-> x = Some(99)
+example.rs:10 ❯ x.unwrap() + 1 = 100
+```
+
+#### Printing more information
+`ice!()` prints a longer output that includes the calling module and function.
+```
+example.rs::a_module::some_function:11 ❯
+```
+
+### Configuring `ic!()`
+
+You can also configure the characters used for symbols in the print output.
+
+```rust
+// main.rs
+#[macro_use]
+extern crate icecream;
+
+fn main() {
+    icecream::set_equals_symbol(" -> ");
+    let x = vec![1, 2, 3];                  // main.rs:7 ❯ x -> [1, 2, 3]
+    ic!(x);
+}
 ```
 
 ### Tests
