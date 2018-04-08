@@ -1,26 +1,22 @@
-use std::fmt::Debug;
-use std::sync::{Mutex, RwLock};
 
 #[macro_use]
 extern crate lazy_static;
-
 extern crate backtrace;
-pub use backtrace::Backtrace;  // "pub use" so it's accessible from the absolute path icecream::Backtrace.
-
-pub mod parsed_backtrace;
-use parsed_backtrace::ParsedBacktrace;
-
-pub mod printer;
-pub use printer::Printer;
 
 #[macro_use]
 mod macros;
+pub mod parsed_backtrace;
+pub mod formatter;
+
+use std::sync::RwLock;
+pub use backtrace::Backtrace;
+pub use formatter::Formatter;
 
 /* Possible symbols -> : | ❯ */
 lazy_static! {
-    pub static ref PRINTER: RwLock<Printer> = {
+    pub static ref PRINTER: RwLock<Formatter> = {
         RwLock::new(
-            Printer {
+            Formatter {
                 sep: String::from(":"),
                 arrow: String::from(" ❯ "),
                 eq: String::from(" = "),

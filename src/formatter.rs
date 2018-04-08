@@ -4,14 +4,14 @@ use std::path::Path;
 use super::parsed_backtrace::ParsedBacktrace;
 
 
-pub struct Printer {
+pub struct Formatter {
     pub sep: String,
     pub arrow: String,
     pub eq: String,
 }
 
 
-impl Printer {
+impl Formatter {
 
     pub fn ic(&self, line: u32, file_path: &str) -> String {
         format!("{file_name}:{line}{arrow}",
