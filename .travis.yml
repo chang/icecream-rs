@@ -5,4 +5,4 @@ os:
   # - linux  # backtraces must be parsed differently on linux
 
 script:
-  - cargo test -- --nocapture
+  - RUST_TEST_THREADS=1 cargo test -- --nocapture

@@ -1,8 +1,9 @@
 use std::fmt::Debug;
-use std::sync::Mutex;
+use std::sync::{Mutex, RwLock, Arc};
 
 #[macro_use]
 extern crate lazy_static;
+
 extern crate backtrace;
 pub use backtrace::Backtrace;  // "pub use" so it's accessible from the absolute path icecream::Backtrace.
 
@@ -17,25 +18,25 @@ mod macros;
 
 /* Possible symbols -> : | ❯ */
 lazy_static! {
-    pub static ref PRINTER: Mutex<Printer> = {
-        Mutex::new(
+    pub static ref PRINTER: RwLock<Printer> = {
+        RwLock::new(
             Printer {
-                sep: String::from("|"),
-                pad: String::from(">"),
-                eq: String::from("="),
+                sep: String::from(":"),
+                arrow: String::from(" ❯ "),
+                eq: String::from(" = "),
             }
         )
     };
 }
 
-fn set_separator_symbol(symbol: String) {
-    PRINTER.lock().unwrap().sep = symbol;
+fn set_separator_symbol(symbol: &str) {
+    PRINTER.write().unwrap().sep = String::from(symbol);
 }
 
-fn set_padding_symbol(symbol: String) {
-    PRINTER.lock().unwrap().pad = symbol;
+fn set_arrow_symbol(symbol: &str) {
+    PRINTER.write().unwrap().arrow = String::from(symbol);
 }
 
-fn set_eq_symbol(symbol: String) {
-    PRINTER.lock().unwrap().eq = symbol;
+fn set_eq_symbol(symbol: &str) {
+    PRINTER.write().unwrap().eq = String::from(symbol);
 }

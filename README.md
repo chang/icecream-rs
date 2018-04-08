@@ -50,8 +50,8 @@ mod a_module {
 
 ### Tests
 
-Tests *must* be run with the `--nocapture` flag since they test the output of stdout, and `cargo test` without flags will capture stdout, making the tests fail.
+Tests *must* be run single-threaded with the `--nocapture` flag.
 
 ```
-cargo test -- --nocapture
+RUST_TEST_THREADS=1 cargo test -- --nocapture
 ```
