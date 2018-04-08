@@ -1,36 +1,41 @@
 use std::fmt::Debug;
+use std::sync::Mutex;
 
+#[macro_use]
+extern crate lazy_static;
 extern crate backtrace;
-pub use backtrace::Backtrace;  // Must "pub use" backtrace so it's accessible from the absolute path
-                               // icecream::Backtrace
+pub use backtrace::Backtrace;  // "pub use" so it's accessible from the absolute path icecream::Backtrace.
 
 pub mod parsed_backtrace;
 use parsed_backtrace::ParsedBacktrace;
 
+pub mod printer;
+pub use printer::Printer;
+
 #[macro_use]
 mod macros;
 
-// TODO: allow these to be configurable by the user
-const SEP_SYMBOL: &str = "|";
-const PAD_SYMBOL: &str = ">";
-
-
-pub fn short_header(li: &ParsedBacktrace) {
-    println!("{num} {ss} {func}()",
-             num = li.lineno(),
-             func = li.funcname(),
-             ss = SEP_SYMBOL);
+/* Possible symbols -> : | ❯ */
+lazy_static! {
+    pub static ref PRINTER: Mutex<Printer> = {
+        Mutex::new(
+            Printer {
+                sep: String::from("|"),
+                pad: String::from(">"),
+                eq: String::from("="),
+            }
+        )
+    };
 }
 
-pub fn full_header(li: &ParsedBacktrace) {
-    println!("{num} {ss} {file}::{module}::{func}",
-             file = li.filename(),
-             module = li.modname(),
-             num = li.lineno(),
-             func = li.funcname(),
-             ss = SEP_SYMBOL);
+fn set_separator_symbol(symbol: String) {
+    PRINTER.lock().unwrap().sep = symbol;
 }
 
-pub fn print_variable<T: Debug>(var: &T, varname: &str) {
-    println!("{} {} = {:?}", PAD_SYMBOL, varname, var);
+fn set_padding_symbol(symbol: String) {
+    PRINTER.lock().unwrap().pad = symbol;
+}
+
+fn set_eq_symbol(symbol: String) {
+    PRINTER.lock().unwrap().eq = symbol;
 }

@@ -1,38 +1,31 @@
-#[macro_use]
-extern crate icecream;
 extern crate gag;
-
 use std::io::Read;
 use gag::BufferRedirect;
 
-// Captures the stdout from a macro call (ic! or ice!) and assert equality with a &str.
-macro_rules! assert_stdout_eq {
-    // Wrap expanded code in a block so variables go out of scope.
-    ($macro_call:expr, $assertion:expr) => ({
-        let mut buf = BufferRedirect::stdout().unwrap(); $macro_call;  // The wrapped macro call must be evaluated on the same line.
-        let mut output = String::new();
-        buf.read_to_string(&mut output).unwrap();
-        assert_eq!(output.trim(), $assertion);
-    })
-}
+#[macro_use]
+extern crate icecream;
+
+#[macro_use]
+mod assert_stdout_eq;
 
 
 #[test]
-fn smoke_test() {
-    assert_stdout_eq!(ice!(), "22 | smoke_test()");
+fn test_ice() {
+    assert_stdout_eq!(ice!(), "14 | test_ice()");
 
     let x = 99;
-    assert_stdout_eq!(ice!(x), vec!["25 | smoke_test()", "> x = 99"].join("\n"));
+    assert_stdout_eq!(ice!(x), vec!["17 | test_ice()", "> x = 99"].join("\n"));
 }
 
 
 #[cfg(test)]
 mod a_module {
+    use super::*;
+
     #[test]
     fn some_function() {
-        // ice!();
 
-        // let x = 99;
-        // ice!(x);
+
     }
+
 }
