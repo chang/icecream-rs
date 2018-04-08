@@ -1,5 +1,5 @@
 use std::fmt::Debug;
-use std::sync::{Mutex, RwLock, Arc};
+use std::sync::{Mutex, RwLock};
 
 #[macro_use]
 extern crate lazy_static;
@@ -29,14 +29,14 @@ lazy_static! {
     };
 }
 
-fn set_separator_symbol(symbol: &str) {
+pub fn set_separator_symbol(symbol: &str) {
     PRINTER.write().unwrap().sep = String::from(symbol);
 }
 
-fn set_arrow_symbol(symbol: &str) {
+pub fn set_arrow_symbol(symbol: &str) {
     PRINTER.write().unwrap().arrow = String::from(symbol);
 }
 
-fn set_eq_symbol(symbol: &str) {
+pub fn set_equals_symbol(symbol: &str) {
     PRINTER.write().unwrap().eq = String::from(symbol);
 }

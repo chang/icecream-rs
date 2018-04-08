@@ -10,7 +10,9 @@ use gag::BufferRedirect;
 #[macro_use]
 extern crate icecream;
 
-// These tests must be run single-threaded due to a race condition when capturing stdout.
+
+// These tests must be run single-threaded due to a race condition when capturing stdout,
+// but we still need a mutex for mutability.
 lazy_static! {
     pub static ref STDOUT: Mutex<BufferRedirect> = {
         Mutex::new(BufferRedirect::stdout().unwrap())
@@ -35,34 +37,39 @@ macro_rules! assert_stdout_eq {
     }};
 }
 
-
 #[test]
-fn test_ice() {
-    assert_stdout_eq!(ice!(), format!("smoke.rs::smoke::test_ice::{} ❯", line!()));
-
-    let x = 99;
-    // assert_stdout_eq!(ice!(x), vec!["17 ❯ test_ice()", "❯ x = 99"].join("\n"));
+fn test_plain_call() {
+    assert_stdout_eq!(ic!(), "smoke.rs:42 ❯");
+    assert_stdout_eq!(ice!(), "smoke.rs::smoke::test_plain_call::43 ❯");
 }
 
-
 #[test]
-fn test_ic() {
-    assert_stdout_eq!(ic!(), format!("tests/smoke.rs:{} ❯", line!()));
-
+fn test_ident_match() {
     let x = 99;
-    // assert_stdout_eq!(ic!(x), vec!["17 ❯ test_ic()", "❯ x = 99"].join("\n"));
+    assert_stdout_eq!(ic!(x), format!("smoke.rs:{} ❯ x = 99", line!()));
+    assert_stdout_eq!(ice!(x), format!("smoke.rs::smoke::test_ident_match::{} ❯ x = 99", line!()));
 }
 
-
-
-#[cfg(test)]
-mod a_module {
-    use super::*;
-
-    #[test]
-    fn some_function() {
-
-
+#[test]
+fn test_expr_match() {
+    fn a_function(x: i32) -> i32 {
+        x + 2
     }
+    assert_stdout_eq!(ic!(a_function(2)), format!("smoke.rs:{} ❯ a_function(2) = 4", line!()));
+    assert_stdout_eq!(ice!(a_function(2)), format!("smoke.rs::smoke::test_expr_match::{} ❯ a_function(2) = 4", line!()));
+}
 
+#[test]
+fn test_set_separator_symbol() {
+    icecream::set_arrow_symbol("TEST");
+    assert_stdout_eq!(ic!(), format!("smoke.rs:{}TEST", line!()));
+    icecream::set_arrow_symbol(" ❯ ");
+}
+
+#[test]
+fn test_set_equals_symbol() {
+    let x = 99;
+    icecream::set_equals_symbol("TEST");
+    assert_stdout_eq!(ic!(x), format!("smoke.rs:{} ❯ xTEST99", line!()));
+    icecream::set_equals_symbol(" = ");
 }
