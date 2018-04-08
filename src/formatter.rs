@@ -14,8 +14,9 @@ pub struct Formatter {
 impl Formatter {
 
     pub fn ic(&self, line: u32, file_path: &str) -> String {
-        format!("{file_name}:{line}{arrow}",
+        format!("{file_name}{sep}{line}{arrow}",
                 file_name = self.file_name(file_path),
+                sep = self.sep,
                 line = line,
                 arrow = self.arrow)
     }
@@ -26,14 +27,14 @@ impl Formatter {
                 expr = self.expr_string(val, expr))
     }
 
-    // ice!() - parse backtraces for additional information (like calling function).ParsedBacktrace
 
     pub fn ice(&self, li: ParsedBacktrace) -> String {
-        format!("{file}::{module}::{func}::{line}{arrow}",
+        format!("{file}::{module}::{func}{sep}{line}{arrow}",
                 file = li.filename(),
                 module = li.modname(),
-                line = li.lineno(),
                 func = li.funcname(),
+                sep = self.sep,
+                line = li.lineno(),
                 arrow = self.arrow)
     }
 

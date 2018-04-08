@@ -40,14 +40,17 @@ macro_rules! assert_stdout_eq {
 #[test]
 fn test_plain_call() {
     assert_stdout_eq!(ic!(), "smoke.rs:42 ❯");
-    assert_stdout_eq!(ice!(), "smoke.rs::smoke::test_plain_call::43 ❯");
+    assert_stdout_eq!(ice!(), "smoke.rs::smoke::test_plain_call:43 ❯");
 }
 
 #[test]
 fn test_ident_match() {
     let x = 99;
+    let y = Some(0);
     assert_stdout_eq!(ic!(x), format!("smoke.rs:{} ❯ x = 99", line!()));
-    assert_stdout_eq!(ice!(x), format!("smoke.rs::smoke::test_ident_match::{} ❯ x = 99", line!()));
+    assert_stdout_eq!(ice!(x), format!("smoke.rs::smoke::test_ident_match:{} ❯ x = 99", line!()));
+    assert_stdout_eq!(ic!(y), format!("smoke.rs:{} ❯ y = Some(0)", line!()));
+    assert_stdout_eq!(ice!(y), format!("smoke.rs::smoke::test_ident_match:{} ❯ y = Some(0)", line!()));
 }
 
 #[test]
@@ -56,14 +59,23 @@ fn test_expr_match() {
         x + 2
     }
     assert_stdout_eq!(ic!(a_function(2)), format!("smoke.rs:{} ❯ a_function(2) = 4", line!()));
-    assert_stdout_eq!(ice!(a_function(2)), format!("smoke.rs::smoke::test_expr_match::{} ❯ a_function(2) = 4", line!()));
+    assert_stdout_eq!(ice!(a_function(2)), format!("smoke.rs::smoke::test_expr_match:{} ❯ a_function(2) = 4", line!()));
+    assert_stdout_eq!(ic!(a_function(2) + 1), format!("smoke.rs:{} ❯ a_function(2) + 1 = 5", line!()));
+    assert_stdout_eq!(ice!(a_function(2) + 1), format!("smoke.rs::smoke::test_expr_match:{} ❯ a_function(2) + 1 = 5", line!()));
 }
 
 #[test]
-fn test_set_separator_symbol() {
+fn test_set_arrow_symbol() {
     icecream::set_arrow_symbol("TEST");
     assert_stdout_eq!(ic!(), format!("smoke.rs:{}TEST", line!()));
     icecream::set_arrow_symbol(" ❯ ");
+}
+
+#[test]
+fn test_set_sep_symbol() {
+    icecream::set_separator_symbol("TEST");
+    assert_stdout_eq!(ic!(), format!("smoke.rsTEST{} ❯", line!()));
+    icecream::set_separator_symbol(":");
 }
 
 #[test]
