@@ -1,8 +1,27 @@
 language: rust
 
 os:
-  - osx
-  # - linux  # backtraces must be parsed differently on linux
+  # - osx
+  - linux  # backtraces must be parsed differently on linux
+
+dist: trusty
+addons:
+    apt:
+        packages:
+            - libssl-dev
+
+cache: cargo
+rust:
+  - stable
 
 script:
-  - RUST_TEST_THREADS=1 cargo test -- --nocapture
+- cargo clean
+- cargo build
+- RUST_TEST_THREADS=1 cargo test -- --nocapture
+
+after_success: |
+  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+    bash <(curl https://raw.githubusercontent.com/xd009642/tarpaulin/master/travis-install.sh)
+    cargo tarpaulin --out Xml
+    bash <(curl -s https://codecov.io/bash)
+  fi
