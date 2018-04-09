@@ -5,7 +5,7 @@ extern crate backtrace;
 macro_rules! ic {
     () => {{
         let (line, file) = (line!(), file!());
-        let formatter = &$crate::PRINTER.read().unwrap();
+        let formatter = $crate::PRINTER.read().unwrap();
         println!("{}", formatter.ic(line, file));
     }};
 
@@ -13,6 +13,12 @@ macro_rules! ic {
         let (line, file) = (line!(), file!());
         let formatter = &$crate::PRINTER.read().unwrap();
         println!("{}", formatter.ic_expr(&$x, stringify!($x), line, file));
+    }};
+
+    ($annotation:expr, $x:expr) => {{
+        let (line, file) = (line!(), file!());
+        let formatter = &$crate::PRINTER.read().unwrap();
+        println!("{}", formatter.ic_annotated($annotation, &$x, stringify!($x), line, file));
     }};
 }
 
@@ -33,5 +39,12 @@ macro_rules! ice {
         let parsed = $crate::parsed_backtrace::ParsedBacktrace::new(&backtrace);
         let formatter = &$crate::PRINTER.read().unwrap();
         println!("{}", formatter.ice_expr(&$x, stringify!($x), parsed));
+    }};
+
+    ($annotation: expr, $x:expr) => {{
+        let backtrace = $crate::Backtrace::new();
+        let parsed = $crate::parsed_backtrace::ParsedBacktrace::new(&backtrace);
+        let formatter = &$crate::PRINTER.read().unwrap();
+        println!("{}", formatter.ice_annotated($annotation, &$x, stringify!($x), parsed));
     }};
 }

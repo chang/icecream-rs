@@ -65,6 +65,13 @@ fn test_expr_match() {
 }
 
 #[test]
+fn test_annotation_match() {
+    let x = Some(8);
+    assert_stdout_eq!(ic!("Note to self.", x), format!("smoke.rs:{} ❯ Note to self.\nx = Some(8)", line!()));
+    assert_stdout_eq!(ice!("Note to self.", x), format!("smoke.rs::smoke::test_annotation_match:{} ❯ Note to self.\nx = Some(8)", line!()));
+}
+
+#[test]
 fn test_set_arrow_symbol() {
     icecream::set_arrow_symbol("TEST");
     assert_stdout_eq!(ic!(), format!("smoke.rs:{}TEST", line!()));
