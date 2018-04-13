@@ -13,10 +13,10 @@
 let x = vec![1, 2, 3];
 
 // regular print debugging...
-println!("x = {:?}", x);         // x = [1, 2, 3]
+println!("x = {:?}", x);       // x = [1, 2, 3]
 
 // icecream print debugging.
-ic!(x);                          // main.rs:8 ❯ x = [1, 2, 3]
+ic!(x);                        // main.rs:8 ❯ x = [1, 2, 3]
 ```
 
 Print debugging with inspection for Rust. Inspired by [icecream](https://github.com/gruns/icecream) for Python.
@@ -40,6 +40,8 @@ mod a_module {
     }
 }
 ```
+
+### Basic usage
 
 #### Plain
 `ic!()` prints the filename and line number.
@@ -66,10 +68,17 @@ example.rs:10 ❯ x.unwrap() + 1 = 100
 example.rs::a_module::some_function:11 ❯
 ```
 
-### Configuring `ic!()`
+### Features
 
+#### Returns its argument
+`ic!()` returns its argument, so it can be inserted into any expression.
+```rust
+let x = Some(99);
+assert_eq!(ic!(x), Some(99))   // main.rs:8 ❯ x = Some(99)
+```
+
+#### Configurable
 You can also configure the characters used for symbols in the print output.
-
 ```rust
 // main.rs
 #[macro_use]
@@ -77,14 +86,14 @@ extern crate icecream;
 
 fn main() {
     icecream::set_equals_symbol(" -> ");
-    let x = vec![1, 2, 3];                  // main.rs:7 ❯ x -> [1, 2, 3]
+    let x = vec![1, 2, 3];                // main.rs:7 ❯ x -> [1, 2, 3]
     ic!(x);
 }
 ```
 
 ### Tests
 
-Tests *must* be run single-threaded with the `--nocapture` flag.
+Tests must be run single-threaded with the `--nocapture` flag due to a race condition when printing to stdout.
 
 ```
 RUST_TEST_THREADS=1 cargo test -- --nocapture

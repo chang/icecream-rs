@@ -23,7 +23,6 @@ lazy_static! {
 // Captures the stdout from a macro call (ic! or ice!) and assert equality with a &str.
 #[macro_export]
 macro_rules! assert_stdout_eq {
-    // Wrap expanded code in a block so variables go out of scope.
     ($macro_call:expr, $expected:expr) => {{
         let mut buf = STDOUT.lock().unwrap();
         let mut output = String::new();
@@ -37,6 +36,7 @@ macro_rules! assert_stdout_eq {
     }};
 }
 
+
 #[test]
 fn test_plain_call() {
     assert_stdout_eq!(ic!(), "smoke.rs:42 ❯");
@@ -46,11 +46,16 @@ fn test_plain_call() {
 #[test]
 fn test_ident_match() {
     let x = 99;
-    let y = Some(0);
     assert_stdout_eq!(ic!(x), format!("smoke.rs:{} ❯ x = 99", line!()));
     assert_stdout_eq!(ice!(x), format!("smoke.rs::smoke::test_ident_match:{} ❯ x = 99", line!()));
+    assert_eq!(ic!(x), 99);
+    assert_eq!(ice!(x), 99);
+
+    let y = Some(0);
     assert_stdout_eq!(ic!(y), format!("smoke.rs:{} ❯ y = Some(0)", line!()));
     assert_stdout_eq!(ice!(y), format!("smoke.rs::smoke::test_ident_match:{} ❯ y = Some(0)", line!()));
+    assert_eq!(ic!(y), Some(0));
+    assert_eq!(ice!(y), Some(0));
 }
 
 #[test]
@@ -58,10 +63,16 @@ fn test_expr_match() {
     fn a_function(x: i32) -> i32 {
         x + 2
     }
+
     assert_stdout_eq!(ic!(a_function(2)), format!("smoke.rs:{} ❯ a_function(2) = 4", line!()));
     assert_stdout_eq!(ice!(a_function(2)), format!("smoke.rs::smoke::test_expr_match:{} ❯ a_function(2) = 4", line!()));
     assert_stdout_eq!(ic!(a_function(2) + 1), format!("smoke.rs:{} ❯ a_function(2) + 1 = 5", line!()));
     assert_stdout_eq!(ice!(a_function(2) + 1), format!("smoke.rs::smoke::test_expr_match:{} ❯ a_function(2) + 1 = 5", line!()));
+
+    assert_eq!(ic!(a_function(2)), 4);
+    assert_eq!(ice!(a_function(2)), 4);
+    assert_eq!(ic!(a_function(2) + 1), 5);
+    assert_eq!(ice!(a_function(2) + 1), 5);
 }
 
 #[test]
@@ -69,6 +80,8 @@ fn test_annotation_match() {
     let x = Some(8);
     assert_stdout_eq!(ic!("Note to self.", x), format!("smoke.rs:{} ❯ Note to self.\nx = Some(8)", line!()));
     assert_stdout_eq!(ice!("Note to self.", x), format!("smoke.rs::smoke::test_annotation_match:{} ❯ Note to self.\nx = Some(8)", line!()));
+    // assert_eq!(ic!("Note to self.", x), Some(8));
+    // assert_eq!(ice!("Note to self.", x), Some(8));
 }
 
 #[test]
