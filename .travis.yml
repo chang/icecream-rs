@@ -1,8 +1,8 @@
 language: rust
 
 os:
-  # - osx
-  - linux  # backtraces must be parsed differently on linux
+  - osx
+  # - linux  # backtraces must be parsed differently on linux
 
 dist: trusty
 addons:

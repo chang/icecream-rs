@@ -1,8 +1,8 @@
 # icecream-rs
 
 <p align="left">
-  <a href="https://travis-ci.org/ericchang00/icecream-rs">
-    <img src="https://img.shields.io/travis/ericchang00/icecream-rs.svg">
+  <a href="https://travis-ci.org/chang/icecream-rs">
+    <img src="https://img.shields.io/travis/chang/icecream-rs.svg">
   </a>
   <a href="https://crates.io/crates/icecream">
     <img src="https://img.shields.io/crates/v/icecream.svg">

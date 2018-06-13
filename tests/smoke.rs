@@ -15,7 +15,7 @@ extern crate icecream;
 // but we still need a mutex for mutability.
 lazy_static! {
     pub static ref STDOUT: Mutex<BufferRedirect> = {
-        Mutex::new(BufferRedirect::stdout().unwrap())
+        Mutex::new(BufferRedirect::stderr().unwrap())
     };
 }
 
